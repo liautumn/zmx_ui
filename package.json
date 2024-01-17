@@ -1,8 +1,8 @@
 {
-  "name": "autumn",
+  "name": "",
   "version": "3.8.7",
   "description": "疫苗智慧管理系统",
-  "author": "autumn",
+  "author": "",
   "license": "MIT",
   "scripts": {
     "dev": "set NODE_OPTIONS=--openssl-legacy-provider && vue-cli-service serve",
@@ -33,7 +33,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://gitee.com/y_project/RuoYi-Vue.git"
+    "url": ""
   },
   "dependencies": {
     "@riophae/vue-treeselect": "0.4.0",
