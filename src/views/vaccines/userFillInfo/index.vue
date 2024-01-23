@@ -70,21 +70,15 @@
         />
       </el-form-item>
       <el-form-item label="状态" prop="state">
-        <el-input
-            v-model="queryParams.state"
-            placeholder="请输入状态"
-            clearable
-            @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.state" placeholder="请选择状态" clearable>
+          <el-option
+              v-for="dict in dict.type.user_fill_state"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-<!--      <el-form-item label="创建者" prop="createBy">-->
-<!--        <el-input-->
-<!--            v-model="queryParams.createBy"-->
-<!--            placeholder="请输入创建者"-->
-<!--            clearable-->
-<!--            @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
       <el-form-item label="创建时间" prop="createTime">
         <el-date-picker clearable
                         v-model="queryParams.createTime"
@@ -163,33 +157,50 @@
           <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.childrenSex"/>
         </template>
       </el-table-column>
-      <el-table-column label="孩子出生日期" align="center" prop="childrenBirthday" width="180">
+      <el-table-column label="孩子出生日期" align="center" prop="childrenBirthday" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.childrenBirthday, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="填报日期" align="center" prop="today" width="180">
+      <el-table-column label="填报日期" align="center" prop="today" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.today, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="孩子过敏事项" align="center" prop="childrenAllergy" width="100"
+      <el-table-column label="孩子过敏事项" align="center" prop="childrenAllergy" width="120"
                        :show-overflow-tooltip="true"/>
-      <el-table-column label="家长手机号码" align="center" prop="userPhone" width="100"
+      <el-table-column label="家长手机号码" align="center" prop="userPhone" width="120"
                        :show-overflow-tooltip="true"/>
       <el-table-column label="家庭住址" align="center" prop="address" :show-overflow-tooltip="true"/>
-      <el-table-column label="注意事项" align="center" prop="takeCare" :show-overflow-tooltip="true"/>
-      <el-table-column label="评分" align="center" prop="score"/>
-      <el-table-column label="意见建议" align="center" prop="opinions" :show-overflow-tooltip="true"/>
-      <el-table-column label="状态" align="center" prop="state"/>
+      <!--      <el-table-column label="注意事项" align="center" prop="takeCare" :show-overflow-tooltip="true">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <div v-html='scope.row.takeCare'></div>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
+      <el-table-column label="评分" align="center" prop="score">
+        <template slot-scope="scope">
+          <span>
+            {{ scope.row.score }}
+          </span>
+        </template>
+      </el-table-column>
+      <!--      <el-table-column label="意见建议" align="center" prop="opinions" :show-overflow-tooltip="true">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <div v-html='scope.row.opinions'></div>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
+      <el-table-column label="状态" align="center" prop="state">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.user_fill_state" :value="scope.row.state"/>
+        </template>
+      </el-table-column>
       <el-table-column label="创建者" align="center" prop="createBy"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <!--      <el-table-column label="备注" align="center" prop="remark"/>-->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="130" fixed="right">
         <template slot-scope="scope">
           <el-button
               size="mini"
@@ -222,77 +233,101 @@
     <!-- 添加或修改用户填报信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
-        <!--        <el-form-item label="用户ID" prop="userId">-->
-        <!--          <el-input v-model="form.userId" placeholder="请输入用户ID"/>-->
-        <!--        </el-form-item>-->
-        <el-form-item label="家长姓名" prop="userName">
-          <el-input v-model="form.userName" placeholder="请输入家长姓名"/>
-        </el-form-item>
-        <el-form-item label="家长性别" prop="userSex">
-          <el-radio-group v-model="form.userSex">
-            <el-radio
-                v-for="dict in dict.type.sys_user_sex"
-                :key="dict.value"
-                :label="dict.value"
-            >{{ dict.label }}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="孩子姓名" prop="childrenName">
-          <el-input v-model="form.childrenName" placeholder="请输入孩子姓名"/>
-        </el-form-item>
-        <el-form-item label="孩子性别" prop="childrenSex">
-          <el-radio-group v-model="form.childrenSex">
-            <el-radio
-                v-for="dict in dict.type.sys_user_sex"
-                :key="dict.value"
-                :label="dict.value"
-            >{{ dict.label }}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="孩子出生日期" prop="childrenBirthday">
-          <el-date-picker clearable
-                          v-model="form.childrenBirthday"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择孩子出生日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="填报日期" prop="today">
-          <el-date-picker clearable disabled
-                          v-model="form.today"
-                          type="date"
-                          value-format="yyyy-MM-dd"
-                          placeholder="请选择填报日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="孩子过敏事项" prop="childrenAllergy">
-          <el-input v-model="form.childrenAllergy" type="textarea" placeholder="请输入内容"/>
-        </el-form-item>
-        <el-form-item label="家长手机号码" prop="userPhone">
-          <el-input v-model="form.userPhone" placeholder="请输入家长手机号码"/>
-        </el-form-item>
-        <el-form-item label="家庭住址" prop="address">
-          <el-input v-model="form.address" type="textarea" placeholder="请输入内容"/>
-        </el-form-item>
-        <el-form-item label="注意事项">
-          <editor v-model="form.takeCare" :min-height="192"/>
-        </el-form-item>
-        <el-form-item label="评分" prop="score">
-          <el-rate style="margin-top: 8px"
-                   v-model="form.score"
-                   :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
-          </el-rate>
-        </el-form-item>
-        <el-form-item label="意见建议">
-          <editor v-model="form.opinions" :min-height="192"/>
-        </el-form-item>
-        <!--        <el-form-item label="备注" prop="remark">-->
-        <!--          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>-->
-        <!--        </el-form-item>-->
+        <el-tabs v-model="activeName">
+          <el-tab-pane name="first">
+            <span slot="label"><i class="el-icon-edit"></i> 填报信息</span>
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="家长姓名" prop="userName">
+                  <el-input v-model="form.userName" placeholder="请输入家长姓名"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="家长性别" prop="userSex">
+                  <el-radio-group v-model="form.userSex">
+                    <el-radio
+                        v-for="dict in dict.type.sys_user_sex"
+                        :key="dict.value"
+                        :label="dict.value"
+                    >{{ dict.label }}
+                    </el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="孩子姓名" prop="childrenName">
+
+
+                  <el-input v-model="form.childrenName" placeholder="请输入孩子姓名"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="孩子性别" prop="childrenSex">
+                  <el-radio-group v-model="form.childrenSex">
+                    <el-radio
+                        v-for="dict in dict.type.sys_user_sex"
+                        :key="dict.value"
+                        :label="dict.value"
+                    >{{ dict.label }}
+                    </el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="孩子出生日期" prop="childrenBirthday">
+                  <el-date-picker clearable style="width: 100%"
+                                  v-model="form.childrenBirthday"
+                                  type="date"
+                                  value-format="yyyy-MM-dd"
+                                  placeholder="请选择孩子出生日期">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="填报日期" prop="today">
+                  <el-date-picker clearable disabled style="width: 100%"
+                                  v-model="form.today"
+                                  type="date"
+                                  value-format="yyyy-MM-dd"
+                                  placeholder="请选择填报日期">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-form-item label="孩子过敏事项" prop="childrenAllergy">
+              <el-input v-model="form.childrenAllergy" type="textarea" placeholder="请输入内容"/>
+            </el-form-item>
+            <el-form-item label="家长手机号码" prop="userPhone">
+              <el-input type="number" v-model="form.userPhone" placeholder="请输入家长手机号码"/>
+            </el-form-item>
+            <el-form-item label="家庭住址" prop="address">
+              <el-input v-model="form.address" type="textarea" placeholder="请输入内容"/>
+            </el-form-item>
+            <el-form-item label="注意事项" v-if="isAdmin">
+              <editor v-model="form.takeCare" :min-height="192" :readOnly="false"/>
+            </el-form-item>
+          </el-tab-pane>
+          <el-tab-pane name="second" v-if="isAdmin">
+            <span slot="label"><i class="el-icon-star-off"></i> 评价意见</span>
+            <el-form-item label="评分" prop="score">
+              <el-rate style="margin-top: 8px"
+                       v-model="form.score"
+                       :icon-classes="['icon-rate-face-1', 'icon-rate-face-2', 'icon-rate-face-3']"
+                       void-icon-class="icon-rate-face-off"
+                       :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                       show-text>
+              </el-rate>
+            </el-form-item>
+            <el-form-item label="意见建议">
+              <editor v-model="form.opinions" :min-height="192" :readOnly="false"/>
+            </el-form-item>
+          </el-tab-pane>
+        </el-tabs>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">保 存</el-button>
+        <el-button type="primary" @click="submitForm">提 交</el-button>
+        <el-button type="primary" @click="submitForm">已 读</el-button>
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -308,10 +343,12 @@ import {
   addUserFillInfo,
   updateUserFillInfo
 } from "@/api/vaccines/userFillInfo";
+import "@/assets/elementStyle/fonts/style.css"
+
 
 export default {
   name: "UserFillInfo",
-  dicts: ['sys_user_sex'],
+  dicts: ['sys_user_sex', 'user_fill_state'],
   data() {
     return {
       // 遮罩层
@@ -412,10 +449,16 @@ export default {
             trigger: "blur"
           }
         ],
-      }
+      },
+      activeName: 'first',
+      isAdmin: false,
     };
   },
   created() {
+    const username = this.$store.state.user.name;
+    if (username == 'admin') {
+      this.isAdmin = true;
+    }
     this.getList();
   },
   methods: {
@@ -466,6 +509,7 @@ export default {
         ext10: null
       };
       this.resetForm("form");
+      this.activeName = "first";
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -487,7 +531,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加用户填报信息";
+      this.title = "添加";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -496,7 +540,7 @@ export default {
       getUserFillInfo(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改用户填报信息";
+        this.title = "修改";
       });
     },
     /** 提交按钮 */
