@@ -94,9 +94,9 @@
     <!-- 添加或修改公司记录对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
       <el-descriptions class="margin-top" title="个人信息" :column="3" border>
-<!--        <template slot="extra">-->
-<!--          <el-button type="primary" size="small">操作</el-button>-->
-<!--        </template>-->
+        <!--        <template slot="extra">-->
+        <!--          <el-button type="primary" size="small">操作</el-button>-->
+        <!--        </template>-->
         <el-descriptions-item>
           <template slot="label">
             <i class="el-icon-user"></i>
