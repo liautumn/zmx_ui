@@ -311,7 +311,28 @@
               <el-input v-model="form.address" type="textarea" placeholder="请输入内容"
                         :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))"/>
             </el-form-item>
-            <el-form-item label="注意事项" v-if="isAdmin || form.state == '4'">
+
+
+            <el-form-item label="选择疫苗" prop="ext3"
+                          v-if="(operationFlag != 'insert') &&(this.form.ext2 == '1') && isAdmin">
+              <el-select v-model="form.ext3" placeholder="请选择接种的疫苗" multiple>
+                <el-option
+                    v-for="dict in vaccinationInfos"
+                    :key="dict.value"
+                    :label="dict.label"
+                    :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="需要接种的疫苗" prop="ext1"
+                          v-if="(operationFlag != 'insert') && (isAdmin ||  form.state == '4' || form.state == '5')">
+              <el-input v-model="form.ext1" type="textarea" placeholder="请输入内容"
+                        :disabled="(!this.isAdmin && (this.form.state == '4' || this.form.state == '5'))"/>
+            </el-form-item>
+
+            <el-form-item label="注意事项"
+                          v-if="(operationFlag != 'insert') && (isAdmin || form.state == '4' || form.state == '5')">
               <editor v-model="form.takeCare" :min-height="192"
                       :readOnly="(!this.isAdmin && (this.form.state == '4' || this.form.state == '5'))"/>
             </el-form-item>
@@ -526,11 +547,13 @@
         </el-tabs>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" v-if="!isAdmin && (form.state == null)" @click="submitForm('1')">保 存</el-button>
+        <el-button type="primary" v-if="!isAdmin && (form.state == '1' || form.state == null)" @click="submitForm('1')">保 存</el-button>
         <el-button type="primary" v-if="!isAdmin && (form.state == '1' || form.state == null)" @click="submitForm('2')">
           提 交
         </el-button>
-        <el-button type="primary" v-if="isAdmin && (form.state == '3')" @click="submitForm('4')">通 过</el-button>
+        <el-button type="primary" v-if="isAdmin && (form.state == '3' || form.state == '2')" @click="submitForm('4')">通
+          过
+        </el-button>
         <el-button type="primary" v-if="!isAdmin && (form.state == '4')" @click="submitForm('5')">已 读</el-button>
         <el-button type="primary" v-if="!isAdmin && (form.state == '5') && form.scoreIsNull"
                    @click="submitForm('5')">评 价
@@ -550,7 +573,8 @@ import {
   addUserFillInfo,
   updateUserFillInfo
 } from "@/api/vaccines/userFillInfo";
-import "@/assets/elementStyle/fonts/style.css"
+import "@/assets/elementStyle/fonts/style.css";
+import {getVaccinationInfoByMapToLV} from "@/api/vaccines/vaccinesInfo";
 
 
 export default {
@@ -632,7 +656,7 @@ export default {
           {required: true, message: "填报日期不能为空", trigger: "blur"}
         ],
         childrenAllergy: [
-          {required: true, message: "孩子过敏事项不能为空", trigger: "blur"}
+          {required: false, message: "孩子过敏事项不能为空", trigger: "blur"}
         ],
         userPhone: [
           {required: true, message: "家长手机号码不能为空", trigger: "blur"}
@@ -660,6 +684,7 @@ export default {
       activeName: 'first',
       isAdmin: false,
       operationFlag: null,
+      vaccinationInfos: []
     };
   },
   created() {
@@ -668,8 +693,15 @@ export default {
       this.isAdmin = true;
     }
     this.getList();
+    this.getVaccinationMethodByMapToLV();
   },
   methods: {
+    getVaccinationMethodByMapToLV() {
+      let map = {};
+      getVaccinationInfoByMapToLV(map).then(response => {
+        this.vaccinationInfos = response.data;
+      });
+    },
     /** 查询用户填报信息列表 */
     getList() {
       this.loading = true;
@@ -762,7 +794,8 @@ export default {
           let params = {
             ...this.form,
             ...{
-              "roleFlag": roleFlag
+              "roleFlag": roleFlag,
+              "ext3": JSON.stringify(this.form.ext3)
             }
           };
           if (this.form.id != null) {

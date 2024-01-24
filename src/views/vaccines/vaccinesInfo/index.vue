@@ -229,7 +229,7 @@ import {
   addVaccinesInfo,
   updateVaccinesInfo
 } from "@/api/vaccines/vaccinesInfo";
-import {getVaccinationMethodByMapToLV} from "@/api/vaccines/vaccinationMethodInfo"
+import {getVaccinationMethodByMapToLV} from "@/api/vaccines/vaccinationMethodInfo";
 
 export default {
   name: "VaccinesInfo",
