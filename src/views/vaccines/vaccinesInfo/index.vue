@@ -20,7 +20,7 @@
       <el-form-item label="接种方式" prop="vaccinationMethodCode">
         <el-select v-model="queryParams.vaccinationMethodCode" placeholder="请选择接种方式" clearable>
           <el-option
-              v-for="dict in dict.type.sys_normal_disable"
+              v-for="dict in vaccinationMethodInfo"
               :key="dict.value"
               :label="dict.label"
               :value="dict.value"
@@ -129,11 +129,7 @@
       <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="疫苗名称" align="center" prop="vaccinesName" width="180"/>
       <el-table-column label="疫苗标识" align="center" prop="vaccinesCode"/>
-      <el-table-column label="接种方式" align="center" prop="vaccinationMethodCode">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.vaccinationMethodCode"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="接种方式" align="center" prop="vaccinationMethodCode"/>
       <el-table-column label="最小年龄(天)" align="center" prop="ageMin"/>
       <el-table-column label="最大年龄(天)" align="center" prop="ageMax"/>
       <el-table-column label="状态" align="center" prop="state">
@@ -190,7 +186,7 @@
         <el-form-item label="接种方式" prop="vaccinationMethodCode">
           <el-select v-model="form.vaccinationMethodCode" placeholder="请选择接种方式">
             <el-option
-                v-for="dict in dict.type.sys_normal_disable"
+                v-for="dict in vaccinationMethodInfo"
                 :key="dict.value"
                 :label="dict.label"
                 :value="dict.value"
@@ -233,6 +229,7 @@ import {
   addVaccinesInfo,
   updateVaccinesInfo
 } from "@/api/vaccines/vaccinesInfo";
+import {getVaccinationMethodByMapToLV} from "@/api/vaccines/vaccinationMethodInfo"
 
 export default {
   name: "VaccinesInfo",
@@ -291,7 +288,7 @@ export default {
           {required: true, message: "疫苗标识不能为空", trigger: "blur"}
         ],
         vaccinationMethodCode: [
-          {required: true, message: "接种方式标识不能为空", trigger: "change"}
+          {required: true, message: "接种方式不能为空", trigger: "change"}
         ],
         ageMin: [
           {required: true, message: "最小年龄(天)不能为空", trigger: "blur"}
@@ -302,13 +299,21 @@ export default {
         state: [
           {required: true, message: "状态不能为空", trigger: "change"}
         ],
-      }
+      },
+      vaccinationMethodInfo: []
     };
   },
   created() {
     this.getList();
+    this.getVaccinationMethodByMapToLV();
   },
   methods: {
+    getVaccinationMethodByMapToLV() {
+      let map = {};
+      getVaccinationMethodByMapToLV(map).then(response => {
+        this.vaccinationMethodInfo = response.data;
+      });
+    },
     /** 查询疫苗信息列表 */
     getList() {
       this.loading = true;

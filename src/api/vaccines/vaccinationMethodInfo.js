@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+
+export function getVaccinationMethodByMapToLV(query) {
+  return request({
+    url: '/vaccines/vaccinationMethodInfo/getVaccinationMethodByMapToLV',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询接种方法信息列表
 export function listVaccinationMethodInfo(query) {
   return request({

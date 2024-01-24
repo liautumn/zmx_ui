@@ -144,40 +144,40 @@
     </el-row>
 
     <el-table v-loading="loading" :data="userFillInfoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="家长姓名" align="center" prop="userName"/>
-      <el-table-column label="家长性别" align="center" prop="userSex">
+      <el-table-column :key="1" type="selection" width="55" align="center"/>
+      <el-table-column :key="2" label="家长姓名" align="center" prop="userName"/>
+      <el-table-column :key="3" label="家长性别" align="center" prop="userSex">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.userSex"/>
         </template>
       </el-table-column>
-      <el-table-column label="孩子姓名" align="center" prop="childrenName"/>
-      <el-table-column label="孩子性别" align="center" prop="childrenSex">
+      <el-table-column :key="4" label="孩子姓名" align="center" prop="childrenName"/>
+      <el-table-column :key="5" label="孩子性别" align="center" prop="childrenSex">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.childrenSex"/>
         </template>
       </el-table-column>
-      <el-table-column label="孩子出生日期" align="center" prop="childrenBirthday" width="120">
+      <el-table-column :key="6" label="孩子出生日期" align="center" prop="childrenBirthday" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.childrenBirthday, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="填报日期" align="center" prop="today" width="120">
+      <el-table-column :key="7" label="填报日期" align="center" prop="today" width="120">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.today, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="孩子过敏事项" align="center" prop="childrenAllergy" width="120"
+      <el-table-column :key="8" label="孩子过敏事项" align="center" prop="childrenAllergy" width="120"
                        :show-overflow-tooltip="true"/>
-      <el-table-column label="家长手机号码" align="center" prop="userPhone" width="120"
+      <el-table-column :key="9" label="家长手机号码" align="center" prop="userPhone" width="120"
                        :show-overflow-tooltip="true"/>
-      <el-table-column label="家庭住址" align="center" prop="address" :show-overflow-tooltip="true"/>
+      <el-table-column :key="10" label="家庭住址" align="center" prop="address" :show-overflow-tooltip="true"/>
       <!--      <el-table-column label="注意事项" align="center" prop="takeCare" :show-overflow-tooltip="true">-->
       <!--        <template slot-scope="scope">-->
       <!--          <div v-html='scope.row.takeCare'></div>-->
       <!--        </template>-->
       <!--      </el-table-column>-->
-      <el-table-column label="评分" align="center" prop="score">
+      <el-table-column :key="11" label="评分" align="center" prop="score">
         <template slot-scope="scope">
           <span>
             {{ scope.row.score }}
@@ -189,18 +189,19 @@
       <!--          <div v-html='scope.row.opinions'></div>-->
       <!--        </template>-->
       <!--      </el-table-column>-->
-      <el-table-column label="状态" align="center" prop="state">
+      <el-table-column :key="12" label="状态" align="center" prop="state">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.user_fill_state" :value="scope.row.state"/>
         </template>
       </el-table-column>
-      <el-table-column label="创建者" align="center" prop="createBy"/>
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+      <el-table-column :key="13" label="创建者" align="center" prop="createBy"/>
+      <el-table-column :key="14" label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="130" fixed="right">
+      <el-table-column :key="15" label="操作" align="center" class-name="small-padding fixed-width" width="130"
+                       fixed="right">
         <template slot-scope="scope">
           <el-button
               size="mini"
@@ -239,12 +240,14 @@
             <el-row>
               <el-col :span="12">
                 <el-form-item label="家长姓名" prop="userName">
-                  <el-input v-model="form.userName" placeholder="请输入家长姓名"/>
+                  <el-input v-model="form.userName" placeholder="请输入家长姓名"
+                            :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))"/>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="家长性别" prop="userSex">
-                  <el-radio-group v-model="form.userSex">
+                  <el-radio-group v-model="form.userSex"
+                                  :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))">
                     <el-radio
                         v-for="dict in dict.type.sys_user_sex"
                         :key="dict.value"
@@ -256,14 +259,14 @@
               </el-col>
               <el-col :span="12">
                 <el-form-item label="孩子姓名" prop="childrenName">
-
-
-                  <el-input v-model="form.childrenName" placeholder="请输入孩子姓名"/>
+                  <el-input v-model="form.childrenName" placeholder="请输入孩子姓名"
+                            :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))"/>
                 </el-form-item>
               </el-col>
               <el-col :span="12">
                 <el-form-item label="孩子性别" prop="childrenSex">
-                  <el-radio-group v-model="form.childrenSex">
+                  <el-radio-group v-model="form.childrenSex"
+                                  :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))">
                     <el-radio
                         v-for="dict in dict.type.sys_user_sex"
                         :key="dict.value"
@@ -279,7 +282,8 @@
                                   v-model="form.childrenBirthday"
                                   type="date"
                                   value-format="yyyy-MM-dd"
-                                  placeholder="请选择孩子出生日期">
+                                  placeholder="请选择孩子出生日期"
+                                  :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))">
                   </el-date-picker>
                 </el-form-item>
               </el-col>
@@ -289,25 +293,30 @@
                                   v-model="form.today"
                                   type="date"
                                   value-format="yyyy-MM-dd"
-                                  placeholder="请选择填报日期">
+                                  placeholder="请选择填报日期"
+                  >
                   </el-date-picker>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-form-item label="孩子过敏事项" prop="childrenAllergy">
-              <el-input v-model="form.childrenAllergy" type="textarea" placeholder="请输入内容"/>
+              <el-input v-model="form.childrenAllergy" type="textarea" placeholder="请输入内容"
+                        :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))"/>
             </el-form-item>
             <el-form-item label="家长手机号码" prop="userPhone">
-              <el-input type="number" v-model="form.userPhone" placeholder="请输入家长手机号码"/>
+              <el-input type="number" v-model="form.userPhone" placeholder="请输入家长手机号码"
+                        :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))"/>
             </el-form-item>
             <el-form-item label="家庭住址" prop="address">
-              <el-input v-model="form.address" type="textarea" placeholder="请输入内容"/>
+              <el-input v-model="form.address" type="textarea" placeholder="请输入内容"
+                        :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))"/>
             </el-form-item>
-            <el-form-item label="注意事项" v-if="isAdmin">
-              <editor v-model="form.takeCare" :min-height="192" :readOnly="false"/>
+            <el-form-item label="注意事项" v-if="isAdmin || form.state == '4'">
+              <editor v-model="form.takeCare" :min-height="192"
+                      :readOnly="(!this.isAdmin && (this.form.state == '4' || this.form.state == '5'))"/>
             </el-form-item>
           </el-tab-pane>
-          <el-tab-pane name="second" v-if="!(operationFlag == 'insert')">
+          <el-tab-pane name="second" v-if="(!(operationFlag == 'insert')) && (form.state == '4' || form.state == '5')">
             <span slot="label"><i class="el-icon-star-off"></i> 评价意见</span>
             <el-form-item label="评分" prop="score">
               <!--              <el-rate style="margin-top: 8px"-->
@@ -318,16 +327,30 @@
               <!--                       show-text>-->
               <!--              </el-rate>-->
               <div class="feedback">
-                <div class="rating" @click="form.score = 0">
-                  <input v-model="form.score" type="radio" value="5" name="rating" id="rating-5">
+                <div class="rating" @click="()=>{
+                  if(!(!this.isAdmin && (this.form.state == '4' || this.form.state == '5') && !this.form.scoreIsNull)){
+                    form.score = 0
+                  }
+                }">
+                  <input
+                      :disabled="(!this.isAdmin && (this.form.state == '4' || this.form.state == '5') && !this.form.scoreIsNull)"
+                      v-model="form.score" type="radio" value="5" name="rating" id="rating-5">
                   <label for="rating-5"></label>
-                  <input v-model="form.score" type="radio" value="4" name="rating" id="rating-4">
+                  <input
+                      :disabled="(!this.isAdmin && (this.form.state == '4' || this.form.state == '5') && !this.form.scoreIsNull)"
+                      v-model="form.score" type="radio" value="4" name="rating" id="rating-4">
                   <label for="rating-4"></label>
-                  <input v-model="form.score" type="radio" value="3" name="rating" id="rating-3">
+                  <input
+                      :disabled="(!this.isAdmin && (this.form.state == '4' || this.form.state == '5') && !this.form.scoreIsNull)"
+                      v-model="form.score" type="radio" value="3" name="rating" id="rating-3">
                   <label for="rating-3"></label>
-                  <input v-model="form.score" type="radio" value="2" name="rating" id="rating-2">
+                  <input
+                      :disabled="(!this.isAdmin && (this.form.state == '4' || this.form.state == '5') && !this.form.scoreIsNull)"
+                      v-model="form.score" type="radio" value="2" name="rating" id="rating-2">
                   <label for="rating-2"></label>
-                  <input v-model="form.score" type="radio" value="1" name="rating" id="rating-1">
+                  <input
+                      :disabled="(!this.isAdmin && (this.form.state == '4' || this.form.state == '5') && !this.form.scoreIsNull)"
+                      v-model="form.score" type="radio" value="1" name="rating" id="rating-1">
                   <label for="rating-1"></label>
                   <div class="emoji-wrapper">
                     <div class="emoji">
@@ -495,18 +518,24 @@
               </div>
 
             </el-form-item>
-            {{ pfValue }}
             <el-form-item label="意见建议">
-              <editor v-model="form.opinions" :min-height="192" :readOnly="false"/>
+              <editor v-model="form.opinions" :min-height="192"
+                      :readOnly="(!this.isAdmin && (this.form.state == '4' || this.form.state == '5') && !this.form.scoreIsNull)"/>
             </el-form-item>
           </el-tab-pane>
         </el-tabs>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">保 存</el-button>
-        <el-button type="primary" @click="submitForm">提 交</el-button>
-        <el-button type="primary" @click="submitForm">已 读</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" v-if="!isAdmin && (form.state == null)" @click="submitForm('1')">保 存</el-button>
+        <el-button type="primary" v-if="!isAdmin && (form.state == '1' || form.state == null)" @click="submitForm('2')">
+          提 交
+        </el-button>
+        <el-button type="primary" v-if="isAdmin && (form.state == '3')" @click="submitForm('4')">通 过</el-button>
+        <el-button type="primary" v-if="!isAdmin && (form.state == '4')" @click="submitForm('5')">已 读</el-button>
+        <el-button type="primary" v-if="!isAdmin && (form.state == '5') && form.scoreIsNull"
+                   @click="submitForm('5')">评 价
+        </el-button>
+        <el-button type="primary" v-if="isAdmin" @click="submitForm(null)">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -685,7 +714,8 @@ export default {
         ext7: null,
         ext8: null,
         ext9: null,
-        ext10: null
+        ext10: null,
+        scoreIsNull: null
       };
       this.resetForm("form");
       this.activeName = "first";
@@ -726,17 +756,23 @@ export default {
       });
     },
     /** 提交按钮 */
-    submitForm() {
+    submitForm(roleFlag) {
       this.$refs["form"].validate(valid => {
         if (valid) {
+          let params = {
+            ...this.form,
+            ...{
+              "roleFlag": roleFlag
+            }
+          };
           if (this.form.id != null) {
-            updateUserFillInfo(this.form).then(response => {
+            updateUserFillInfo(params).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addUserFillInfo(this.form).then(response => {
+            addUserFillInfo(params).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
