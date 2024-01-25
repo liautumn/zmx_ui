@@ -546,7 +546,7 @@
         </el-button>
         <button class="button btnPublic" @click="animateButtonClick"
                 v-if="!isAdmin && (form.state == '1' || form.state == null)">
-          <span class="default">send</span>
+          <span class="default">提 交</span>
           <span class="success">提交成功</span>
           <div class="left"></div>
           <div class="right"></div>
