@@ -102,6 +102,7 @@
             size="mini"
             @click="handleAdd"
             v-hasPermi="['vaccines:userFillInfo:add']"
+            v-if="!isAdmin"
         >新增
         </el-button>
       </el-col>
