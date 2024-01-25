@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
 
-      <div v-if="isAdmin">
+      <span v-if="isAdmin">
         <el-badge :value="map.adminWD" :max="99" class="item">
           <el-button size="small" @click="() => {
           this.queryParams.stateIn = '2,3';
@@ -27,9 +27,9 @@
         }">已审核
           </el-button>
         </el-badge>
-      </div>
+      </span>
 
-      <div v-if="!isAdmin">
+      <span v-if="!isAdmin">
         <el-badge :value="map.WD" :max="99" class="item">
           <el-button size="small" @click="() => {
           this.queryParams.stateIn = '4';
@@ -54,7 +54,7 @@
         }">已读
           </el-button>
         </el-badge>
-      </div>
+      </span>
 
       <el-form-item label="家长姓名" prop="userName" v-if="isAdmin">
         <el-input
@@ -150,7 +150,7 @@
       <!--          <div v-html='scope.row.opinions'></div>-->
       <!--        </template>-->
       <!--      </el-table-column>-->
-      <el-table-column :key="12" label="状态" align="center" prop="state">
+      <el-table-column :key="12" label="状态" align="center" prop="state" width="180">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.user_fill_state" :value="scope.row.state"/>
         </template>
@@ -268,7 +268,7 @@
 
             <el-form-item label="选择疫苗" prop="ext3"
                           v-if="(operationFlag != 'insert') &&(this.form.ext2 == '1') && isAdmin">
-              <el-select v-model="form.ext3" placeholder="请选择接种的疫苗" multiple>
+              <el-select v-model="form.ext3" placeholder="请选择接种的疫苗" multiple style="width: 100%">
                 <el-option
                     v-for="dict in vaccinationInfos"
                     :key="dict.value"
@@ -630,12 +630,8 @@ export default {
         opinions: [
           {required: true, message: "意见建议不能为空", trigger: "blur"}
         ],
-        state: [
-          {
-            required: true,
-            message: "状态不能为空",
-            trigger: "blur"
-          }
+        ext3: [
+          {required: true, message: "接种疫苗不能为空", trigger: "change"}
         ],
       },
       activeName: 'first',
@@ -654,7 +650,7 @@ export default {
   },
   created() {
     // 设置定时器，每2分钟触发一次事件
-    // setInterval(this.myEvent, 5 * 1000); // 2分钟 = 2 * 60秒 * 1000毫秒
+    setInterval(this.myEvent, 30 * 1000); // 2分钟 = 2 * 60秒 * 1000毫秒
     const username = this.$store.state.user.name;
     if (username == 'admin') {
       this.isAdmin = true;
