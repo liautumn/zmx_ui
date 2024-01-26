@@ -251,6 +251,18 @@
                   </el-date-picker>
                 </el-form-item>
               </el-col>
+              <el-col :span="12">
+                <el-form-item label="家长手机号码" prop="userPhone">
+                  <el-input v-model="form.userPhone" placeholder="请输入手机号码" maxlength="11"
+                            :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))"/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="家长邮箱" prop="ext4">
+                  <el-input v-model="form.ext4" placeholder="请输入邮箱" maxlength="50"
+                            :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))"/>
+                </el-form-item>
+              </el-col>
             </el-row>
             <el-form-item label="孩子过敏事项" prop="childrenAllergy">
               <el-input v-model="form.childrenAllergy" type="textarea" placeholder="请输入内容"
@@ -615,8 +627,21 @@ export default {
         childrenAllergy: [
           {required: false, message: "孩子过敏事项不能为空", trigger: "blur"}
         ],
+        ext4: [
+          {required: true, message: "邮箱地址不能为空", trigger: "blur"},
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"]
+          }
+        ],
         userPhone: [
-          {required: true, message: "家长手机号码不能为空", trigger: "blur"}
+          {required: true, message: "手机号码不能为空", trigger: "blur"},
+          {
+            pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
         ],
         address: [
           {required: true, message: "家庭住址不能为空", trigger: "blur"}
@@ -828,6 +853,7 @@ export default {
     },
     // 表单重置
     reset() {
+      let user = this.$store.state.user;
       this.form = {
         id: null,
         userId: null,
@@ -838,7 +864,7 @@ export default {
         childrenBirthday: null,
         today: new Date(),
         childrenAllergy: null,
-        userPhone: null,
+        userPhone: user.phonenumber,
         address: null,
         takeCare: null,
         score: null,
@@ -850,7 +876,7 @@ export default {
         ext1: null,
         ext2: null,
         ext3: null,
-        ext4: null,
+        ext4: user.email,
         ext5: null,
         ext6: null,
         ext7: null,
