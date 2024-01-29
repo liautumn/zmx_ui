@@ -267,10 +267,6 @@
               <el-input v-model="form.childrenAllergy" type="textarea" placeholder="请输入内容"
                         :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))"/>
             </el-form-item>
-            <el-form-item label="家长手机号码" prop="userPhone">
-              <el-input type="number" v-model="form.userPhone" placeholder="请输入家长手机号码"
-                        :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))"/>
-            </el-form-item>
             <el-form-item label="家庭住址" prop="address">
               <el-input v-model="form.address" type="textarea" placeholder="请输入内容"
                         :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))"/>
@@ -500,6 +496,21 @@
               <editor v-model="form.opinions" :min-height="192"
                       :readOnly="(!this.isAdmin && (this.form.state == '4' || this.form.state == '5') && !this.form.scoreIsNull)"/>
             </el-form-item>
+
+            <el-form-item label="疫苗流程">
+              <el-timeline :reverse="false">
+                <el-timeline-item
+                    v-for="(lc, index) in lcData"
+                    :key="index"
+                    :hide-timestamp="true"
+                >
+                  {{ lc.ext2 }}
+                  <br/>
+                  {{ lc.ext3 }}
+                </el-timeline-item>
+              </el-timeline>
+            </el-form-item>
+
           </el-tab-pane>
         </el-tabs>
       </el-form>
@@ -542,6 +553,7 @@ import {
 import {getVaccinationInfoByMapToLV} from "@/api/vaccines/vaccinesInfo";
 import {gsap} from "gsap";
 import "@/assets/send/style.css";
+import {getlcData} from "@/api/vaccines/ageVaccinesInfo";
 
 
 export default {
@@ -669,7 +681,8 @@ export default {
         DPJ: 0,
         adminWD: 0,
         adminYPJ: 0,
-      }
+      },
+      lcData: []
     };
   },
   created() {
@@ -684,8 +697,16 @@ export default {
     this.getList();
     this.getVaccinationMethodByMapToLV();
     setInterval(this.myEvent, 30 * 1000); // 2分钟 = 2 * 60秒 * 1000毫秒
+
+    this.getlc();
   },
   methods: {
+    getlc() {
+      let params = {};
+      getlcData(params).then(response => {
+        this.lcData = response.data;
+      });
+    },
     animateButtonClick() {
       this.$refs["form"].validate(valid => {
         if (valid) {
