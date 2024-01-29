@@ -545,9 +545,25 @@
               <editor v-model="form.opinions" :min-height="192"
                       :readOnly="(!this.isAdmin && (this.form.state == '4' || this.form.state == '5') && !this.form.scoreIsNull)"/>
             </el-form-item>
+
+            <el-form-item label="疫苗流程">
+              <el-timeline :reverse="false">
+                <el-timeline-item
+                    v-for="(lc, index) in lcData"
+                    :key="index"
+                    :hide-timestamp="true"
+                >
+                  {{ lc.ext2 }}
+                  <br/>
+                  {{ lc.ext3 }}
+                </el-timeline-item>
+              </el-timeline>
+            </el-form-item>
+
           </el-tab-pane>
         </el-tabs>
       </el-form>
+
       <div class="dialog-footer">
         <el-button class="btnPublic" type="primary" v-if="!isAdmin && (form.state == '1' || form.state == null)"
                    @click="submitForm('1')">
@@ -574,6 +590,7 @@
         <el-button class="btnPublic" type="primary" v-if="isAdmin" @click="submitForm(null)">确 定</el-button>
         <el-button class="btnPublic" @click="cancel">取 消</el-button>
       </div>
+
     </el-dialog>
   </div>
 </template>
@@ -587,6 +604,7 @@ import {
   updateUserFillInfo
 } from "@/api/vaccines/userFillInfo";
 import {getVaccinationInfoByMapToLV} from "@/api/vaccines/vaccinesInfo";
+import {getlcData} from "@/api/vaccines/ageVaccinesInfo";
 import {gsap} from "gsap";
 import "@/assets/send/style.css";
 
@@ -707,7 +725,8 @@ export default {
       activeName: 'first',
       isAdmin: false,
       operationFlag: null,
-      vaccinationInfos: []
+      vaccinationInfos: [],
+      lcData: []
     };
   },
   created() {
@@ -717,8 +736,15 @@ export default {
     }
     this.getList();
     this.getVaccinationMethodByMapToLV();
+    this.getlc();
   },
   methods: {
+    getlc() {
+      let params = {};
+      getlcData(params).then(response => {
+        this.lcData = response.data;
+      });
+    },
     animateButtonClick() {
       this.$refs["form"].validate(valid => {
         if (valid) {
