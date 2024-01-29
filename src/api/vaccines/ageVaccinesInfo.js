@@ -8,6 +8,14 @@ export function getlcData(query) {
   })
 }
 
+export function listAgeVaccinesInfo(query) {
+  return request({
+    url: '/vaccines/ageVaccinesInfo/list',
+    method: 'get',
+    params: query
+  })
+}
+
 
 
 // 查询各年龄段需打疫苗信息详细
