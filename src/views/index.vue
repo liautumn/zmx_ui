@@ -1,7 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-
       <span v-if="isAdmin">
         <el-badge :value="map.adminWD" :max="99" class="item">
           <el-button size="small" @click="() => {
@@ -597,7 +596,7 @@ export default {
         ext8: null,
         ext9: null,
         ext10: null,
-        stateIn: this.isAdmin ? '2,3' : '4'
+        stateIn: null
       },
       // 表单参数
       form: {},
@@ -675,13 +674,16 @@ export default {
   },
   created() {
     // 设置定时器，每2分钟触发一次事件
-    setInterval(this.myEvent, 30 * 1000); // 2分钟 = 2 * 60秒 * 1000毫秒
-    const username = this.$store.state.user.name;
-    if (username == 'admin') {
+    const user = this.$store.state.user;
+    if (user.name == 'admin') {
       this.isAdmin = true;
+      this.queryParams.stateIn = '2,3';
+    } else {
+      this.queryParams.stateIn = '4';
     }
     this.getList();
     this.getVaccinationMethodByMapToLV();
+    setInterval(this.myEvent, 30 * 1000); // 2分钟 = 2 * 60秒 * 1000毫秒
   },
   methods: {
     animateButtonClick() {
@@ -883,7 +885,8 @@ export default {
         ext8: null,
         ext9: null,
         ext10: null,
-        scoreIsNull: null
+        scoreIsNull: null,
+        stateIn: this.isAdmin ? '2,3' : '4'
       };
       this.resetForm("form");
       this.activeName = "first";
