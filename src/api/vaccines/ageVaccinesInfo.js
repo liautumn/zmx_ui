@@ -1,13 +1,14 @@
 import request from '@/utils/request'
 
-// 查询各年龄段需打疫苗信息列表
-export function listAgeVaccinesInfo(query) {
+export function getlcData(query) {
   return request({
-    url: '/vaccines/ageVaccinesInfo/list',
+    url: '/vaccines/ageVaccinesInfo/getlcData',
     method: 'get',
     params: query
   })
 }
+
+
 
 // 查询各年龄段需打疫苗信息详细
 export function getAgeVaccinesInfo(id) {
