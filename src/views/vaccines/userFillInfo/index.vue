@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    {{ isJSON(form.ext3) }}
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="家长姓名" prop="userName">
         <el-input
@@ -978,7 +979,7 @@ export default {
             ...this.form,
             ...{
               "roleFlag": roleFlag,
-              "ext3": JSON.stringify(this.form.ext3)
+              "ext3": this.isJSON(this.form.ext3) ? this.form.ext3 : JSON.stringify(this.form.ext3)
             }
           };
           if (this.form.id != null) {
@@ -996,6 +997,23 @@ export default {
           }
         }
       });
+    },
+    isJSON(str) {
+      if (typeof str == 'string') {
+        try {
+          var obj = JSON.parse(str);
+          if (typeof obj == 'object' && obj) {
+            return true;
+          } else {
+            return false;
+          }
+
+        } catch (e) {
+          console.log('error：' + str + '!!!' + e);
+          return false;
+        }
+      }
+      console.log('It is not a string!')
     },
     /** 删除按钮操作 */
     handleDelete(row) {
