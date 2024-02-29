@@ -1,6 +1,5 @@
 <template>
   <div class="app-container">
-    {{ isJSON(form.ext3) }}
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="家长姓名" prop="userName">
         <el-input
@@ -314,7 +313,7 @@
               </el-col>
             </el-row>
             <el-form-item label="孩子过敏事项" prop="childrenAllergy">
-              <el-input v-model="form.childrenAllergy" type="textarea" placeholder="请输入内容"
+              <el-input v-model="form.childrenAllergy" type="textarea" placeholder="注意：“若无过敏事项请留空”"
                         :disabled="(!this.isAdmin && (this.form.state == '2' || this.form.state == '3' || this.form.state == '4' || this.form.state == '5'))"/>
             </el-form-item>
             <el-form-item label="家庭住址" prop="address">
@@ -904,9 +903,9 @@ export default {
       let user = this.$store.state.user;
       this.form = {
         id: null,
-        userId: null,
-        userName: null,
-        userSex: null,
+        userId: user.id,
+        userName: user.nickName,
+        userSex: user.sex,
         childrenName: null,
         childrenSex: null,
         childrenBirthday: null,

@@ -6,6 +6,8 @@ const user = {
         token: getToken(),
         id: '',
         name: '',
+        nickName: '',
+        sex: '',
         avatar: '',
         phonenumber: '',
         email: '',
@@ -22,6 +24,12 @@ const user = {
         },
         SET_NAME: (state, name) => {
             state.name = name
+        },
+        SET_NICKNAME: (state, nickName) => {
+            state.nickName = nickName
+        },
+        SET_SEX: (state, sex) => {
+            state.sex = sex
         },
         SET_AVATAR: (state, avatar) => {
             state.avatar = avatar
@@ -72,6 +80,8 @@ const user = {
                     }
                     commit('SET_ID', user.userId)
                     commit('SET_NAME', user.userName)
+                    commit('SET_NICKNAME', user.nickName)
+                    commit('SET_SEX', user.sex)
                     commit('SET_AVATAR', avatar)
                     commit('SET_PHONENUMBER', user.phonenumber)
                     commit('SET_EMAIL', user.email)
