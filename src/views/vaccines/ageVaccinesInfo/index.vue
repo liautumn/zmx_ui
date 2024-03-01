@@ -115,11 +115,7 @@
       <el-table-column label="年龄(岁)" align="center" prop="age"/>
       <el-table-column label="最小年龄(天)" align="center" prop="ageMin"/>
       <el-table-column label="最大年龄(天)" align="center" prop="ageMax"/>
-      <!--      <el-table-column label="疫苗名称列表" align="center" prop="vaccinesCodes">-->
-      <!--        <template slot-scope="scope">-->
-      <!--          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.vaccinesCodes"/>-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
+      <el-table-column label="疫苗名称列表" align="center" prop="vaccinesNames"/>
       <el-table-column label="注意事项" align="center" prop="takeCare"/>
       <el-table-column label="状态" align="center" prop="state">
         <template slot-scope="scope">
