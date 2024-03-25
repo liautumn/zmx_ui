@@ -190,6 +190,17 @@
           <el-tab-pane name="first">
             <span slot="label"><i class="el-icon-edit"></i> 填报信息</span>
             <el-row>
+              <el-col :span="24" v-if="(this.form.state == '4') || (this.form.state == '5')">
+                <el-alert
+                    :title="dymDays"
+                    type="success"
+                    center
+                    :closable="false">
+                </el-alert>
+              </el-col>
+              <el-col :span="24">
+                <br/>
+              </el-col>
               <el-col :span="12">
                 <el-form-item label="家长姓名" prop="userName">
                   <el-input v-model="form.userName" placeholder="请输入家长姓名"
@@ -682,7 +693,8 @@ export default {
         adminWD: 0,
         adminYPJ: 0,
       },
-      lcData: []
+      lcData: [],
+      dymDays: null
     };
   },
   created() {
@@ -697,8 +709,11 @@ export default {
     this.getList();
     this.getVaccinationMethodByMapToLV();
     setInterval(this.myEvent, 30 * 1000); // 2分钟 = 2 * 60秒 * 1000毫秒
-
     this.getlc();
+
+    this.getConfigKey("zmx.dym.days").then(response => {
+      this.dymDays = response.msg;
+    });
   },
   methods: {
     getlc() {
