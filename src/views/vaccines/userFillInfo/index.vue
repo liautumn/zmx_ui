@@ -239,7 +239,7 @@
           <el-tab-pane name="first">
             <span slot="label"><i class="el-icon-edit"></i> 填报信息</span>
             <el-row>
-              <el-col :span="24" v-if="(this.form.state == '4') || (this.form.state == '5')">
+              <el-col :span="24" v-if="((this.form.state == '4') || (this.form.state == '5') && this.form.ext2 != '2')">
                 <el-alert
                     :title="dymDays"
                     type="success"
