@@ -350,6 +350,18 @@
               <el-input v-model="form.ext1" type="textarea" placeholder="请输入内容"
                         :disabled="(!this.isAdmin && (this.form.state == '4' || this.form.state == '5'))"/>
             </el-form-item>
+            <el-form-item label="用户选择疫苗" prop="ext7"
+                          v-if="(operationFlag != 'insert') && (this.form.ext6 != null) && (this.form.state == 4 || this.form.state == 5)">
+              <el-select v-model="form.ext7" placeholder="请选择接种的疫苗" style="width: 100%"
+                         :disabled="(!this.isAdmin && this.form.state == '5' )">
+                <el-option
+                    v-for="dict in JSON.parse(form.ext6)"
+                    :key="dict.value"
+                    :label="dict.label"
+                    :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
 
             <el-form-item label="注意事项"
                           v-if="(operationFlag != 'insert') && (isAdmin || form.state == '4' || form.state == '5')">
@@ -592,8 +604,8 @@
                    @click="submitForm('4')">通
           过
         </el-button>
-        <el-button class="btnPublic" type="primary" v-if="!isAdmin && (form.state == '4')" @click="submitForm('5')">已
-          读
+        <el-button class="btnPublic" type="primary" v-if="!isAdmin && (form.state == '4')" @click="submitForm('5')">
+          {{ form.ext6 == null ? '已读' : '已读暂扣数量'}}
         </el-button>
         <el-button class="btnPublic" type="primary" v-if="!isAdmin && (form.state == '5') && form.scoreIsNull"
                    @click="submitForm('5')">评 价
@@ -730,6 +742,9 @@ export default {
           {required: true, message: "意见建议不能为空", trigger: "blur"}
         ],
         ext3: [
+          {required: true, message: "接种疫苗不能为空", trigger: "change"}
+        ],
+        ext7: [
           {required: true, message: "接种疫苗不能为空", trigger: "change"}
         ],
       },
@@ -981,6 +996,7 @@ export default {
       const id = row.id || this.ids
       getUserFillInfo(id).then(response => {
         this.form = response.data;
+        this.form.ext7 = JSON.parse(this.form.ext7);
         this.open = true;
         this.title = "修改";
         this.operationFlag = "update";
@@ -994,7 +1010,8 @@ export default {
             ...this.form,
             ...{
               "roleFlag": roleFlag,
-              "ext3": this.isJSON(this.form.ext3) ? this.form.ext3 : JSON.stringify(this.form.ext3)
+              "ext3": this.isJSON(this.form.ext3) ? this.form.ext3 : JSON.stringify(this.form.ext3),
+              "ext7": JSON.stringify(this.form.ext7)
             }
           };
           if (this.form.id != null) {

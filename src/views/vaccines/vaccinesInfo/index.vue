@@ -143,6 +143,7 @@
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="可用数量" align="center" prop="ext1" :show-overflow-tooltip="true"/>
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -198,6 +199,9 @@
         </el-form-item>
         <el-form-item label="最大年龄(天)" prop="ageMax">
           <el-input v-model="form.ageMax" type="number" placeholder="请输入最大年龄(天)"/>
+        </el-form-item>
+        <el-form-item label="可用数量" prop="ext1">
+          <el-input v-model="form.ext1" type="number" placeholder="请输入可用的疫苗数量"/>
         </el-form-item>
         <el-form-item label="状态" prop="state">
           <el-radio-group v-model="form.state">
@@ -295,6 +299,9 @@ export default {
         ],
         ageMax: [
           {required: true, message: "最大年龄(天)不能为空", trigger: "blur"}
+        ],
+        ext1: [
+          {required: true, message: "数量不能为空", trigger: "blur"}
         ],
         state: [
           {required: true, message: "状态不能为空", trigger: "change"}
