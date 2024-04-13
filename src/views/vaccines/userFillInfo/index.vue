@@ -201,7 +201,13 @@
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :key="15" label="操作" align="center" class-name="small-padding fixed-width" width="130"
+      <el-table-column :key="15" label="接种护士" align="center" prop="ext9" fixed="right"/>
+      <el-table-column :key="16" label="接种状态" align="center" prop="ext10" fixed="right">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.vaccination_status" :value="scope.row.ext10"/>
+        </template>
+      </el-table-column>
+      <el-table-column :key="17" label="操作" align="center" class-name="small-padding fixed-width" width="130"
                        fixed="right">
         <template slot-scope="scope">
           <el-button
@@ -362,6 +368,19 @@
                 ></el-option>
               </el-select>
             </el-form-item>
+            <el-row
+                v-if="isAdmin ? (this.form.state == '3' || this.form.state == '4' || this.form.state == '5') && form.ext10 == '2' : (this.form.state == '4' || this.form.state == '5') && form.ext10 == '2'">
+              <el-col :span="12">
+                <el-form-item label="接种护士编号" prop="ext8">
+                  <el-input v-model="form.ext8" disabled/>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="接种护士姓名" prop="ext8">
+                  <el-input v-model="form.ext9" disabled/>
+                </el-form-item>
+              </el-col>
+            </el-row>
 
             <el-form-item label="注意事项"
                           v-if="(operationFlag != 'insert') && (isAdmin || form.state == '4' || form.state == '5')">
@@ -605,10 +624,14 @@
           过
         </el-button>
         <el-button class="btnPublic" type="primary" v-if="!isAdmin && (form.state == '4')" @click="submitForm('5')">
-          {{ form.ext6 == null ? '已读' : '已读暂扣数量'}}
+          {{ form.ext6 == null ? '已读' : '已读暂扣数量' }}
         </el-button>
         <el-button class="btnPublic" type="primary" v-if="!isAdmin && (form.state == '5') && form.scoreIsNull"
                    @click="submitForm('5')">评 价
+        </el-button>
+        <el-button class="btnPublic" type="primary" v-if="isAdmin && form.ext10 == '2' && form.state == '5'"
+                   @click="submitForm('6')">
+          确认接种
         </el-button>
         <el-button class="btnPublic" type="primary" v-if="isAdmin" @click="submitForm(null)">确 定</el-button>
         <el-button class="btnPublic" @click="cancel">取 消</el-button>
@@ -634,7 +657,7 @@ import "@/assets/send/style.css";
 
 export default {
   name: "UserFillInfo",
-  dicts: ['sys_user_sex', 'user_fill_state'],
+  dicts: ['sys_user_sex', 'user_fill_state', 'vaccination_status'],
   data() {
     return {
       // 遮罩层
