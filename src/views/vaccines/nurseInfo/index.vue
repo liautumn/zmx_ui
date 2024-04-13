@@ -327,7 +327,7 @@ export default {
         state: [
           {required: true, message: "不能为空", trigger: "blur"}
         ],
-        ext10: [
+        ext1: [
           {required: true, message: "不能为空 不重复 按顺序", trigger: "blur"}
         ],
 
