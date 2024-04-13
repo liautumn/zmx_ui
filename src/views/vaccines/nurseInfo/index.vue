@@ -230,7 +230,7 @@
         <el-form-item label="简介" prop="biography">
           <el-input v-model="form.biography" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
-        <el-form-item label="排序" prop="biography">
+        <el-form-item label="排序" prop="ext1">
           <el-input v-model="form.ext1" type="number" placeholder="按顺序，不重复"/>
         </el-form-item>
         <el-form-item label="状态" prop="state">
