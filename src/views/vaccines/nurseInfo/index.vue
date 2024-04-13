@@ -140,6 +140,7 @@
         </template>
       </el-table-column>
       <!--      <el-table-column label="简介" align="center" prop="biography"/>-->
+      <el-table-column label="排序" align="center" prop="ext1"/>
       <el-table-column label="状态" align="center" prop="state">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.state"/>
@@ -228,6 +229,9 @@
         </el-form-item>
         <el-form-item label="简介" prop="biography">
           <el-input v-model="form.biography" type="textarea" placeholder="请输入内容"/>
+        </el-form-item>
+        <el-form-item label="排序" prop="biography">
+          <el-input v-model="form.ext1" type="number" placeholder="按顺序，不重复"/>
         </el-form-item>
         <el-form-item label="状态" prop="state">
           <el-radio-group v-model="form.state">

@@ -79,6 +79,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="接种状态" prop="ext10">
+        <el-select v-model="queryParams.ext10" placeholder="请选择状态" clearable>
+          <el-option
+              v-for="dict in dict.type.vaccination_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="创建时间" prop="createTime">
         <el-date-picker clearable
                         v-model="queryParams.createTime"
